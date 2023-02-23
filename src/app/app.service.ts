@@ -8,13 +8,6 @@ export class AppService {
   constructor() {}
 
   getHello(): string {
-    return 'Please use POST method to crawl a page, or CRUD `/snapshots` to interact with existing records.';
-  }
-
-  async crawl(url: string) {
-    // return await pageCrawler(url);
-    // const snapshotRaw = await pageCrawler(url);
-    // if
-    //  this.snapshotsService.create(snapshot);
+    return 'Please use POST method to crawl a page, or CRUD `/snapshots` to interact with existing records. Please refer to the documentation at `/docs` for more details.';
   }
 }
