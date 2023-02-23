@@ -1,6 +1,6 @@
 import { IsUrl } from 'class-validator';
 
-export class CrawlDto {
+export class CreateSnapshotDto {
   @IsUrl()
   url: string;
 }

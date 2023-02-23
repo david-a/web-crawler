@@ -1,10 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { CreateSnapshotDto } from 'src/snapshots/dto/createSnapshot.dto';
+import { SnapshotsService } from 'src/snapshots/snapshots.service';
 import { AppService } from './app.service';
-import { CrawlDto } from './dto/crawl.dto';
+// import { CrawlDto } from '../snapshots/dto/crawl.dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private snapshotsService: SnapshotsService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -12,7 +17,7 @@ export class AppController {
   }
 
   @Post('crawl')
-  crawl(@Body() crawlDto: CrawlDto) {
-    return this.appService.crawl(crawlDto.url);
+  crawl(@Body() createSnapshotDto: CreateSnapshotDto) {
+    return this.snapshotsService.create(createSnapshotDto);
   }
 }
