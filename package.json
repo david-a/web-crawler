@@ -10,6 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prestart": "if command -v pnpm >/dev/null 2>&1; then pnpm install; elif command -v yarn >/dev/null 2>&1; then yarn; else npm install; fi",
     "start": "docker-compose up",
+    "start:d": "docker-compose up -d",
     "stop": "docker-compose down",
     "api": "nest start",
     "api:dev": "nest start --watch",

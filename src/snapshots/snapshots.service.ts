@@ -74,6 +74,8 @@ export class SnapshotsService {
   }
 }
 
+// NOTE: Most of the code below can be extracted to a shared lib or module
+
 const prepareFiltersAndSort = (listProductsDto) => {
   const where = {};
   if (listProductsDto.createdAfter) {
@@ -88,7 +90,7 @@ const prepareFiltersAndSort = (listProductsDto) => {
   }
   const orderBy =
     !listProductsDto.orderBy || listProductsDto.orderBy === 'createdAt'
-      ? '_id'
+      ? '_id' // MongoDB's ObjectId are chronological
       : listProductsDto.orderBy;
   const orderDirection = listProductsDto.orderDirection || 'DESC';
 
@@ -111,6 +113,7 @@ const validateObjectId = (id: string) => {
   return _id;
 };
 
+// This function is mainly to prevent duplicate snapshots url identifiers for the same URL
 const stripUrl = (url: string) => {
   return url.toLowerCase().replace(/\/+$/, '');
 };
@@ -123,13 +126,17 @@ const pageCrawler = async (url: string) => {
   try {
     const page = await browser.newPage();
 
+    // we need to intercept requests to get outgoing urls
     await page.setRequestInterception(true);
     const outgoingUrls: Record<string, string[]> = {};
     configureRequestInterception(page, outgoingUrls);
+
     await page.goto(url);
     const screenshot = await saveScreenshot(page);
+
     const data = await page.evaluate(evaluateJs);
     await page.setRequestInterception(true);
+
     return { screenshot, url, outgoingUrls, ...data };
   } catch (error) {
     throw error;
@@ -164,6 +171,7 @@ const saveScreenshot = async (page: any) => {
   return screenshot;
 };
 
+// This function is executed in the browser context (i.e. can't use variables and functions from the node context)
 const evaluateJs = () => {
   const mapElementsAttribute = (selector: string, attribute: string) => {
     const elements = document.querySelectorAll(selector);
